@@ -1,8 +1,8 @@
-var stageWidth = 483;
-var stageHeigth = 278; 
+var stageWidth = 966;
+var stageHeigth = 556; 
 var numRows = 10;
 var numCols = 21;
-var SeatWidth = stageWidth/numCols; 
+var SeatWidth = stageHeigth < stageWidth ? stageWidth/numCols : stageHeigth/numCols; 
 var zoomSeat = 0.5; 
 
 var seatsPlan=[
@@ -21,8 +21,10 @@ var seatsPlan=[
 function getColor(x,y) {
   if(seatsPlan[y-2][x] == '1')
     return '#ffd012';
-  else 
+  else if(seatsPlan[y-2][x] == '2')
     return 'green';
+  else if(seatsPlan[y-2][x] == '3')
+    return 'grey';
 }
 
 var Seat = Class.create();
@@ -33,17 +35,19 @@ Seat.prototype = {
         this.x = mx;
 	this.y = my;
         var seat = this;
+	color = getColor(seat.x, seat.y);
         
         var trans = null;
         var rect = new Kinetic.Rect({
             x: this.x*SeatWidth,
             y: this.y*SeatWidth,
-            width: SeatWidth,
-	    height: SeatWidth,
-            fill: '#ffd012',
+            width: SeatWidth-5,
+	    height: SeatWidth-5,
+	    cornerRadius: 5,
+            fill: color,
             stroke: 'black',
             opacity: 0.9,
-            strokeWidth: 2,
+            strokeWidth: 1,
             scale: {
               x: 1,
               y: 1
@@ -52,7 +56,7 @@ Seat.prototype = {
    	});
 
    rect.on('click', function() {
-          seatsPlan[seat.y-2][seat.x] = 2;
+          seatsPlan[seat.y-2][seat.x] = 3;
           color = getColor(seat.x, seat.y);
           rect.moveToTop();
 	  rect.setAttrs({
@@ -88,6 +92,12 @@ Seat.prototype = {
 	  rect.setAttrs({
              fill: color
           });
+	  rect.setShadow({
+	    color: 'black',
+	    blur: 5,
+	    offset: [5, 5],
+	    alpha: 0.5
+	  });
    });
 
    rect.on('mouseout', function() {
@@ -105,7 +115,13 @@ Seat.prototype = {
          trans.start();
 	 rect.setAttrs({
              fill: color
-          });
+         });
+	 rect.setShadow({
+	    color: 'white',
+	    blur: 0,
+	    offset: [0, 0],
+	    alpha: 1.0
+	  });
    });
 
    layer.add(rect);
@@ -141,11 +157,11 @@ function createdisplay(layer, stage) {
         drawFunc: function(context) {
             context.beginPath();
             context.moveTo(SeatWidth*2, SeatWidth*1);
-            context.lineTo(SeatWidth*2, SeatWidth*2);
-            context.quadraticCurveTo(SeatWidth*10, SeatWidth*1, 
-                                     SeatWidth*19, SeatWidth*2);
-            context.lineTo(SeatWidth*19, SeatWidth*1);
-            context.quadraticCurveTo(SeatWidth*10, SeatWidth*0, 
+            context.lineTo(SeatWidth*2, SeatWidth*2-SeatWidth/2);
+            context.quadraticCurveTo(SeatWidth*numCols/2, SeatWidth*1, 
+                                     SeatWidth*(numCols-2), SeatWidth*2 - SeatWidth/2);
+            context.lineTo(SeatWidth*(numCols-2), SeatWidth*1);
+            context.quadraticCurveTo(SeatWidth*numCols/2, SeatWidth*0+SeatWidth/2, 
                                      SeatWidth*2, SeatWidth*1);
             context.closePath();
             this.fill(context);
@@ -153,7 +169,7 @@ function createdisplay(layer, stage) {
         },
         fill: '#00D2FF',
         stroke: 'black',
-        strokeWidth: 2,
+        strokeWidth: 1,
 	shadow: {
         	color: 'black',
         	blur: 10,
