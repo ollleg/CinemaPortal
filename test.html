@@ -1,20 +1,26 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <style>
-      body {
-        margin: 0px;
-        padding: 0px;
-      }
-      canvas {
-        border: 1px solid #9C9898;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/styles/cinemaPlanStyles.css" />
     <script src="scripts/prototype.js"></script>
     <script src="scripts/kinetic-v4.0.2.min.js"></script>
     <script src="scripts/cinema.js"></script>
   </head>
   <body onmousedown="return false;">
-    <div id="container"></div>
+    <table class="planTable">
+	<tr><td>
+		<div id="reserver" class="text">Le plan de cinema</div>
+	</td></tr>
+	<tr><td>
+		<div id="container"></div>
+	</td></tr>
+	<tr><td>
+	    <div class="bordered">
+			<div id="places" class="text">Places:</div>
+			<div id="placesContainer"></div>
+			<input class='button-link' type='submit' value='Reserver'/>
+		</div>
+	</td></tr>
+	</table>
   </body>
 </html>
